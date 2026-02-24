@@ -72,6 +72,17 @@ func TestBuildDocComment(t *testing.T) {
 			t.Errorf("expected empty string, got %q", actual)
 		}
 	})
+
+	t.Run("It normalizes whitespace in the description", func(t *testing.T) {
+		t.Parallel()
+		description := "A   sample\n\t description."
+		expected := "\t// UUID A sample description.\n"
+		actual := buildDocComment("UUID", &description, "\t")
+		if actual != expected {
+			t.Errorf("expected %q, got %q", expected, actual)
+		}
+	})
+
 }
 
 func TestGetRef(t *testing.T) {
