@@ -52,6 +52,28 @@ func TestBuildTagString(t *testing.T) {
 	})
 }
 
+func TestBuildDocComment(t *testing.T) {
+	t.Parallel()
+
+	t.Run("It builds a comment when description exists", func(t *testing.T) {
+		t.Parallel()
+		description := "A sample description."
+		expected := "\t// UUID A sample description.\n"
+		actual := buildDocComment("UUID", &description, "\t")
+		if actual != expected {
+			t.Errorf("expected %q, got %q", expected, actual)
+		}
+	})
+
+	t.Run("It returns empty string when description does not exist", func(t *testing.T) {
+		t.Parallel()
+		actual := buildDocComment("UUID", nil, "\t")
+		if actual != "" {
+			t.Errorf("expected empty string, got %q", actual)
+		}
+	})
+}
+
 func TestGetRef(t *testing.T) {
 	t.Parallel()
 	getSchemaByteMap(t)
