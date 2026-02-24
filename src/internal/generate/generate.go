@@ -180,7 +180,8 @@ func (c *GeneratorConfig) buildStructString(def jsonschema.Schema) (structString
 
 	// If there are no properties, return a map[string]interface{} type
 	if len(keys) == 0 {
-		structString = fmt.Sprintf("type %s = map[string]interface{}", name)
+		structString = buildDocComment(name, def.Description, "")
+		structString += fmt.Sprintf("type %s = map[string]interface{}", name)
 		return structString, err
 	}
 
@@ -192,6 +193,7 @@ func (c *GeneratorConfig) buildStructString(def jsonschema.Schema) (structString
 	}
 
 	// Add top level struct definition
+	structString += buildDocComment(name, def.Description, "")
 	structString += fmt.Sprintf("type %s struct {\n", name)
 
 	// Add the properties to the struct string
@@ -213,6 +215,7 @@ func (c *GeneratorConfig) buildStructString(def jsonschema.Schema) (structString
 
 		propType = addPointerIfOptionalNonPrimitive(required[key], propType)
 		propTags := buildTagString(c.tags, key, required[key])
+		structString += buildDocComment(propName, propSchema.Description, "\t")
 		structString += fmt.Sprintf("\t%s %s %s\n", propName, propType, propTags)
 	}
 	// Close the struct

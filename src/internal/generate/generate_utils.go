@@ -144,6 +144,19 @@ func buildTagString(tags []string, field string, required bool) string {
 	return "`" + strings.Join(tagStrings, " ") + "`"
 }
 
+func buildDocComment(identifier string, description *string, indent string) string {
+	if description == nil {
+		return ""
+	}
+
+	normalized := strings.Join(strings.Fields(*description), " ")
+	if normalized == "" {
+		return ""
+	}
+
+	return fmt.Sprintf("%s// %s %s\n", indent, identifier, normalized)
+}
+
 // getRef builds a ref string from a schema
 func getRef(schema jsonschema.Schema) (string, error) {
 	if schema.Ref != nil {
